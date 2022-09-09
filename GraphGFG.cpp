@@ -460,7 +460,6 @@ vector<int> topoloSort(int V, vector<int> adj[])
 vector<int> dijkdtra(int v,vector<vector<int>> adj[],int src){
     vector<int> cost(v,0);
     cost[src] = 0;
-
     vector<bool> visited(v,false);
     priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
     pq.push({0,src});
@@ -490,7 +489,7 @@ vector<int> dijkdtra(int v,vector<vector<int>> adj[],int src){
 
 }
 
-//Prims Algorithms -> Minimum spanning tree
+//Prims Algorithms -> Minimum spanning tree(MST)
 int spanningTree(int v,vector<vector<int>> adj[]){
     int minCost = 0;
     vector<int> costs(v,INT_MAX);
@@ -522,6 +521,44 @@ int spanningTree(int v,vector<vector<int>> adj[]){
         return minCost;
     }
 }
+
+// kruskal's Algorithms :: Minimum cost spanning tree
+class Edge {
+    public:
+        int source;
+        int dest;
+        int weight;
+};
+bool compare(Edge e1,Edge e2){
+    return e1.weight < e2.weight;
+}
+void Kruskals(vector<Edge> &edges,int n,int E){
+    int cost = 0;
+    vector<Edge> results;
+    vector<int> parents;
+    
+    for(auto i : parents) parents[i] = i;
+
+    sort(edges.begin(),edges.begin()+E,compare);
+
+    for(Edge e: edges){
+        if(parents[e.source]!= parents[e.dest]){
+            cost+=e.weight;
+            results.push_back(e);
+
+            int old_id = parents[e.source],new_id = parents[e.dest];
+            for(int i = 0; i < n;i++ ){
+                if(parents[i]==old_id){
+                    parents[i] = new_id;
+                }
+            }
+        }
+    }
+    cout<<"Cost"<<cost<<endl;
+}
+
+
+
 
 //Bellman Ford Algorithm -> useful when dijkstra fails(weight<0)
 //if the graph weight is 0 or 1 then we use 0-1 algorithms
@@ -557,9 +594,36 @@ int bfs(){
     return lev[n]==INF ? -1:lev[n];
 }
 
-//DSU (Disjoint Set union)
+//DSU (Disjoint Set union) -> use in making of sets
+/*
+make -> Add new node to network
+find -> Give parent of that element
+union ->Combined two group in single 
+*/
+int parent[N];
+int size[N];
 
-
+void Make(int v){
+    parent[v] = v;
+}
+//Finding parent of v node
+int Find(int v){
+    if(v==parent[v]) return v;
+    //path compression
+    return parent[v] = Find(parent[v]);
+}
+//conneted two node a and b;
+void Union(int a,int b){
+    a = Find(a);
+    b = Find(b);
+    if(a!=b){
+        if(size[a] < size[b]){
+            swap(a,b);
+        }
+        parent[b] = a;
+        size[a]+=size[b];
+    }
+}
 
 
 int main()
