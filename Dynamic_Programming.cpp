@@ -61,15 +61,17 @@ int main(){
     return 0;
 } 
 /*
-    Dynamic Programming : memorizing the unique results;
+    Dynamic Programming:MEMORIZING THE UNIQUE RESULTS ;
+    
                 steps:: check if ans already exist 
                         yes-> return;
                         No ->
                             calculate->save for future->return;
             
-            TOP-DOWN  -> RECURSION + MEMORIZATION
-            BOTTOM UP -> TABULATION
-                steps: 1) DP array created
-                       2) Check Base case
-                       3) recursive call convert in form of DP
+                        TOP-DOWN  -> RECURSION + MEMORIZATION
+                        
+                        BOTTOM UP -> TABULATION
+                            steps: 1) DP array created
+                                   2) Check Base case
+                                   3) recursive call convert in form of DP
 */
