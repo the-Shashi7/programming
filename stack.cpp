@@ -193,6 +193,29 @@ void Valid_Sub_Leng(string s){
     cout<<"Valid Subsrting is : "<<count<<endl;
 }
 
+/* 921. Minimum Add to Make Parentheses Valid :: https://leetcode.com/problems/minimum-add-to-make-parentheses-valid/
+A parentheses string is valid if and only if:
+It is the empty string,
+It can be written as AB (A concatenated with B), where A and B are valid strings, or
+It can be written as (A), where A is a valid string.
+*/
+
+int minAddToMakeValid(string s) {
+        int n = s.length();
+        stack<char> st;
+        st.push(s[0]);
+        for(int i=1;i<n;i++){
+            if(!st.empty() && st.top()=='(' && s[i] == ')'){
+                st.pop();
+            }else{
+                st.push(s[i]);
+            }
+        }
+    return st.size();
+}
+
+/*
+*/
 
 
 int main(){

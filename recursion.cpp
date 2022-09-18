@@ -192,12 +192,10 @@ void solve(vector<int> &nums , vector<int> &output, int index,vector<vector<int>
     }
     //exclude
     solve(nums,output,index+1,ans);
-
     //Include
     output.push_back(nums[index]);
     solve(nums,output,index+1,ans);
 }
-
 vector<vector<int>>subsets(vector<int> &nums){
     vector<vector<int>> ans;
     vector<int> output;
@@ -218,3 +216,9 @@ int main(){
     subsets(set);
     return 0;
 }
+
+/*
+recursion : a function call itself.
+
+
+*/

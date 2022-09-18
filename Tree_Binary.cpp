@@ -149,6 +149,7 @@ int Sum_Node(Tree_Binary<int>* root){
     return sum;
 }
 
+//                TREE TRAVERSALS
 void Preorder_Btree(Tree_Binary<int>* root){
     if(root==NULL){ return ;}
     cout<<root->data<<" ";
@@ -170,6 +171,70 @@ void Inorder_Btree(Tree_Binary<int>* root){
     cout<<root->data<<" ";
     Inorder_Btree(root->right);
 }
+//                  ::LEVELWISE TRAVERSAL::
+
+vector<int> LevelOrder(Tree_Binary<int>* root){
+    vector<int> ans;
+    if(root==NULL) return ans;
+    queue<Tree_Binary<int>*> pendingNodes;
+    pendingNodes.push(root);
+    while (!pendingNodes.empty()){
+        Tree_Binary<int>* temp = pendingNodes.front();
+        pendingNodes.pop();
+        ans.push_back(temp->data);
+        if(temp->left!=NULL) pendingNodes.push(temp->left);
+        if(temp->right!=NULL) pendingNodes.push(temp->right);
+    }
+    return ans;
+}
+
+vector<vector<int>> levelOrder(Tree_Binary<int>* root) {
+        vector<vector<int>> ans;
+        if(root==NULL) return ans;
+        queue<Tree_Binary<int>*> pendingNodes;
+        pendingNodes.push(root);
+        while(1){
+            int size = pendingNodes.size();
+            if(size==0) return ans;
+            vector<int> data;
+            while(size>0){
+                Tree_Binary<int>* temp = pendingNodes.front();
+                data.push_back(temp->data);
+                pendingNodes.pop();
+                if(temp->left != NULL) pendingNodes.push(temp->left);
+                if(temp->right != NULL) pendingNodes.push(temp->right);
+                size--;
+            }
+            ans.push_back(data);
+        }
+        return ans;
+}
+// =-=-=-=-=-=-=-=-=-=-=-= zig-zag traversal  =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/submissions/
+vector<vector<int>> ZigzagOrder(Tree_Binary<int>* root){
+    vector<vector<int>> ans;
+    if(root==NULL) return ans;
+    queue<Tree_Binary<int>*> q;
+    q.push(root);
+    int count=0;
+    while(1){
+        int size = q.size();
+        count++;
+        vector<int> data;
+        while(size>0){
+            Tree_Binary<int>* temp = q.front();
+            q.pop();
+            data.push_back(temp->data);
+            if(temp->left) q.push(temp->left);
+            if(temp->right) q.push(temp->right);
+            size--;
+        }
+        if(count%2==0) reverse(data.begin(),data.end());
+        ans.push_back(data);
+    }
+    return ans;
+}
+
 
 //Diameter of Binary Tree is the maximum height between two nodes
 
@@ -187,7 +252,7 @@ int Maximum(Tree_Binary<int>* root){
     if(root==NULL){
         return INT_MIN;
     }
-    return max(root->data,max(Maximum(root->left),Maximum(root->right)));
+    return max(root->data, max(Maximum(root->left),Maximum(root->right)));
 }
 
 int Minimum(Tree_Binary<int>* root){
@@ -203,8 +268,55 @@ bool isBST(Tree_Binary<int>* root){
     }
     int LeftMax = Maximum(root->left);
     int RightMin = Minimum(root->right);
-    bool Option = (root->data > LeftMax)&&(root->data <= RightMin) && isBST(root->left) && isBST(root->right);
+    bool Option = (root->data > LeftMax) && (root->data <= RightMin) && isBST(root->left) && isBST(root->right);
     return Option;
+}
+//Checking is tree a balance binary tree: the abs(heigtL - heightR)<=1;
+
+bool isBalanceBT(Tree_Binary<int>* root){
+    if(root==NULL) return true;
+    return isBalanceBT(root->left) && isBalanceBT(root->right) && abs(Height_BTree(root->left)-Height_BTree(root->right))<=1;
+}
+
+//Left View of Binary tree
+
+vector<int> LeftView(Tree_Binary<int>* root){
+    vector<int> ans;
+    if(root==NULL) return ans;
+    queue<Tree_Binary<int>*> q;
+    q.push(root);
+    while(1){
+        int size = q.size();
+        if(size==0) return ans;
+        int data = 0;
+        while(size>0){
+            Tree_Binary<int>* temp = q.front();
+            data = temp->data;
+            q.pop();
+            if(temp->left) q.push(temp->left);
+            if(temp->right) q.push(temp->right);
+            size--;
+        }
+        ans.push_back(data);
+    }
+    return ans;
+}
+
+
+//LCA
+
+Tree_Binary<int> * dfsTraverse(Tree_Binary<int> * root, Tree_Binary<int> * p , Tree_Binary<int> * q){
+    if( root == p || root == q || root == NULL)
+        return root;
+    Tree_Binary<int>* parent1 = dfsTraverse(root->left, p, q);
+    Tree_Binary<int>* parent2 = dfsTraverse(root->right, p, q);
+    if( parent1 && parent2)
+        return root;
+    else
+        return parent1 ? parent1 : parent2;
+ }
+Tree_Binary<int>* lowestCommonAncestor(Tree_Binary<int>* root, Tree_Binary<int>* p, Tree_Binary<int>* q){
+    return dfsTraverse(root, p, q);
 }
 
 
@@ -220,7 +332,6 @@ int main(){
     Tree_Binary<int>* root =TakeInputLevelWise();
     //BT  ::1 2 3 4 5 -1 8 6 7 -1 -1 -1 -1 -1 -1 -1 -1
     //BST :: 10 8 12 7 9 11 13 -1 -1 -1 -1 -1 -1 -1 -1
-    //BST :: 
     cout<<NumNode(root)<<endl;
     Print_BinaryTree(root);
     cout<<MaxNode(root)<<endl;
@@ -240,6 +351,58 @@ int main(){
 }
 
 /*
-CBT : 2^(h-1)<= n <= 2^h -1
+                        "Binary Tree"
+        The maximum children of Node is two, and left node should filled first
+        
+        In a Binary Tree with N nodes, the minimum possible height :: Log(N+1)-1;
 
+The maximum number of node at "i"th level in BT is 2^i;
+The maximum nunber of node of Height "h" tree : 2^h-1;
+
+Full Binary Tree :: A Bt is full binary tree if every node has 0 or 2 children;
+
+Complete BT :: A Bt is complete Tree if all the leveles are completely filled except possibly 
+                the last level and the last level has all keys left as possible;
+
+    Complete Binary Tree : 2^(h-1) <= node <= 2^h -1
+
+Perfetc BT :: A binary tree is a perfect Binary Tree in which all the internal nodes have two children and all leaf nodes are at same level
+
+Balance Binary Tree : A binary tree is Blanced Binary tree if height of tree is O(loh n) where n is
+                        the number of nodes
+
+
+AVL tree   :: AVL tree is a self-balancing Binary Search Tree (BST) where the difference between heights of left and right subtrees cannot be more than one for all nodes
+
+Red_ Black :: A red-black tree is a kind of self-balancing binary search tree where each node has an extra bit, and that bit is often interpreted as the color (red or black). 
+              These colors are used to ensure that the tree remains balanced during insertions and deletions. Although the balance of the tree is not perfect, it is good 
+              enough to reduce the searching time and maintain it around O(log n) time
+            
+        Rules That Every Red-Black Tree Follows: 
+            
+            =>Every node has a color either red or black.
+            =>The root of the tree is always black.
+            =>There are no two adjacent red nodes (A red node cannot have a red parent or red child).
+            =>Every path from a node (including root) to any of its descendants NULL nodes has the same number of black nodes.
+            =>All leaf nodes are black nodes.
+
+
+Degenerate Binary Tree ::  A tree where every internal nodes has one child such trees are 
+                           Such trees are performance wise sam as linked list. 
+
+
+            Traversal In BT
+
+            1
+          /   \
+        2       3
+      /  \    
+     4    5
+
+    Level Transv   :: 12345
+    Inorder Tranv  :: 42513
+    Preorder Tranv :: 12453
+    Postorder Tranv:: 45231
+
+if any two tranversal are same that means trees are equal;
 */

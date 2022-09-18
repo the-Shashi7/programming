@@ -86,16 +86,13 @@ TreeNode<int>* takeInput(){
 
 int numNodes(TreeNode<int>* root){
     if(root==NULL){ return 0;}
-    int ans=0;
+    int ans = 0;
     for(int i=0;i<root->children.size();i++){
         ans+=numNodes(root->children[i]);
     }
     return ans+1;
 }
-
-
 //Height Of tree
-
 int heightTree(TreeNode<int>* root){
     if(root==NULL) return 0;
     int height = 0; 
@@ -105,9 +102,7 @@ int heightTree(TreeNode<int>* root){
     }
    return height+1;
 }
-
 // Maximum node value
-
 int Max_Node(TreeNode<int>*root){
     int max_value= INT_MIN;
     for (int i = 0; i < root->children.size(); i++){
@@ -115,9 +110,7 @@ int Max_Node(TreeNode<int>*root){
     }
     return max(max_value,root->data);
 }
-
 //Pre order DFS
-
 void PreOrderDFS(TreeNode<int>*root){
     if(root==NULL){ return;}
     cout<<root->data<<" ";
@@ -125,7 +118,7 @@ void PreOrderDFS(TreeNode<int>*root){
         PreOrderDFS(root->children[i]);
     }
 }
-
+//Post order DFS
 void PostOrderDFS(TreeNode<int>*root){
     if(root==NULL) return ;
     for(int i=0;i<root->children.size();i++){
@@ -133,7 +126,7 @@ void PostOrderDFS(TreeNode<int>*root){
     }
     cout<<root->data<<" ";
 }
-
+//depth of tree
 void Depth_Node(TreeNode<int>*root,int level){
     if(root==NULL) {
         return;
@@ -143,8 +136,14 @@ void Depth_Node(TreeNode<int>*root,int level){
     for (int i = 0; i < root->children.size(); i++){
         Depth_Node(root->children[i],level-1);
     }
-    
 }
+//Lowest Common Ancestor(LCA) from bottom firts common node or parent node of that two nodes;O(n)
+ 
+
+
+
+
+
 
 void Delete_Node(TreeNode<int>*root){
     for (int i = 0; i < root->children.size(); i++){
