@@ -280,6 +280,40 @@ bool isBalanceBT(Tree_Binary<int>* root){
 
 //Left View of Binary tree
 
+vector<int> leftView(Tree_Binary<int>* root){
+    vector<int> ans;
+    if(root==NULL) return ans;
+    queue<Tree_Binary<int>*> q;
+    q.push(root);
+    while (1){
+     int size = q.size();
+     if(size==0) return ans;
+     int data = -1;
+     while(size>0){
+        Tree_Binary<int>* temp = q.front();
+        q.pop();
+        data = temp->data;
+        if(temp->right) q.push(temp->right);
+        if(temp->left) q.push(temp->left);
+        size--;
+      }   
+      ans.push_back(data);
+    }
+    return ans;
+}
+
+//LCA
+Tree_Binary<int>* LCA(Tree_Binary<int>* root,Tree_Binary<int> *p,Tree_Binary<int> *q){
+    if(root == p || root == q || root == NULL )
+        return root;
+    Tree_Binary<int>* parent1 = LCA(root->left,p,q);
+    Tree_Binary<int>* parent2 = LCA(root->right,p,q);
+    if(parent1 && parent2)
+        return root;
+    else
+        return parent1 ? parent1 : parent2;
+}
+
 vector<int> LeftView(Tree_Binary<int>* root){
     vector<int> ans;
     if(root==NULL) return ans;
@@ -345,7 +379,11 @@ int main(){
     cout<<endl;
     Inorder_Btree(root);
     cout<<endl;
-    cout<<isBST(root)<<endl;
+    //cout<<isBST(root)<<endl;
+    vector<int> ans = leftView(root);
+    for(auto x: ans){
+        cout<<x<<" ";
+    }
     delete root;
     return 0;
 }
