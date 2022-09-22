@@ -150,6 +150,7 @@ int Sum_Node(Tree_Binary<int>* root){
 }
 
 //                TREE TRAVERSALS
+
 void Preorder_Btree(Tree_Binary<int>* root){
     if(root==NULL){ return ;}
     cout<<root->data<<" ";
@@ -171,6 +172,17 @@ void Inorder_Btree(Tree_Binary<int>* root){
     cout<<root->data<<" ";
     Inorder_Btree(root->right);
 }
+
+//Check if tree is equal
+
+bool isSame(Tree_Binary<int>* p,Tree_Binary<int>* q){
+    if(p==NULL && q == NULL) return true;
+    if(p==NULL || q == NULL) return false;
+
+    return isSame(p->left,q->left) && isSame(q->right,q->right) && p->data == q->data;
+}
+
+
 //                  ::LEVELWISE TRAVERSAL::
 
 vector<int> LevelOrder(Tree_Binary<int>* root){
@@ -294,50 +306,35 @@ vector<int> leftView(Tree_Binary<int>* root){
         q.pop();
         data = temp->data;
         if(temp->right) q.push(temp->right);
-        if(temp->left) q.push(temp->left);
+        if(temp->left) q.push(temp->left);  //For right view switch the temp->right with temp->left
         size--;
       }   
       ans.push_back(data);
     }
     return ans;
 }
+//LCA  3*O(n) Sc : O(n) 
+bool findPath(Tree_Binary<int>* root,vector<Tree_Binary<int>*> paths,Tree_Binary<int>* p){
+    if(root==NULL) return false;
+    paths.push_back(root);
+    if(root==p) return true;
+    if(findPath(root->left,paths,p) || findPath(root->right,paths,p)) return true;
 
-//LCA
-Tree_Binary<int>* LCA(Tree_Binary<int>* root,Tree_Binary<int> *p,Tree_Binary<int> *q){
-    if(root == p || root == q || root == NULL )
-        return root;
-    Tree_Binary<int>* parent1 = LCA(root->left,p,q);
-    Tree_Binary<int>* parent2 = LCA(root->right,p,q);
-    if(parent1 && parent2)
-        return root;
-    else
-        return parent1 ? parent1 : parent2;
+    paths.pop_back();
+    return false;
 }
-
-vector<int> LeftView(Tree_Binary<int>* root){
-    vector<int> ans;
-    if(root==NULL) return ans;
-    queue<Tree_Binary<int>*> q;
-    q.push(root);
-    while(1){
-        int size = q.size();
-        if(size==0) return ans;
-        int data = 0;
-        while(size>0){
-            Tree_Binary<int>* temp = q.front();
-            data = temp->data;
-            q.pop();
-            if(temp->left) q.push(temp->left);
-            if(temp->right) q.push(temp->right);
-            size--;
-        }
-        ans.push_back(data);
+Tree_Binary<int>* LCA2(Tree_Binary<int>* root,Tree_Binary<int>*p,Tree_Binary<int>* q){
+    vector<Tree_Binary<int>*> path1,path2;
+    if(!findPath(root,path1,p)||!findPath(root,path2,q))
+        return NULL;
+    Tree_Binary<int>* ans =NULL;
+    for(int i=0;i<path1.size() && path2.size();i++){
+        if(path1[i]==path2[i])
+            ans =path1[i];
     }
     return ans;
 }
-
-
-//LCA
+//O(n) and sc:O(h)
 
 Tree_Binary<int> * dfsTraverse(Tree_Binary<int> * root, Tree_Binary<int> * p , Tree_Binary<int> * q){
     if( root == p || root == q || root == NULL)
@@ -348,11 +345,97 @@ Tree_Binary<int> * dfsTraverse(Tree_Binary<int> * root, Tree_Binary<int> * p , T
         return root;
     else
         return parent1 ? parent1 : parent2;
- }
-Tree_Binary<int>* lowestCommonAncestor(Tree_Binary<int>* root, Tree_Binary<int>* p, Tree_Binary<int>* q){
-    return dfsTraverse(root, p, q);
+}
+//Horizontal Height
+unordered_set<int> st;
+void inorder(Tree_Binary<int>* root,int s){
+    if(!root){
+        st.insert(s);
+        inorder(root->left,s-1);
+        inorder(root->right,s+1);
+    }
+}
+int VertiWidth(Tree_Binary<int>* root){
+    st.clear();
+    inorder(root,0);
+    return st.size();
 }
 
+//Inverted Tree :: https://leetcode.com/problems/invert-binary-tree/submissions/
+
+Tree_Binary<int>* invertTree(Tree_Binary<int>* root) {
+    queue<Tree_Binary<int>*> q;
+    q.push(root);
+    while(!q.empty()){
+        Tree_Binary<int>* node = q.front();
+        q.pop();
+        if(node){
+            q.push(node->left);
+            q.push(node->right);
+            swap(node->left,node->right);
+        }
+    }
+    return root;
+}
+
+//recursive
+Tree_Binary<int>* invertTreeRec(Tree_Binary<int>* root){
+    if(root==NULL) return root; 
+    invertTreeRec(root->left);
+    invertTreeRec(root->right);
+    swap(root->left,root->right);
+    return root;
+}
+
+//Subtree of another tree ::https://leetcode.com/problems/subtree-of-another-tree/
+
+bool isSame1(Tree_Binary<int>* a,Tree_Binary<int>* b){
+    if(b==NULL && a == NULL) return true;
+    if(b==NULL || a == NULL) return false;
+
+    return isSame1(a->left,b->left) && isSame1(a->right,b->right) && a->data == b->data;
+}
+
+bool isSubtree(Tree_Binary<int>* root,Tree_Binary<int>* subRoot){
+    if(!root) return false;
+    else if(isSame1(root,subRoot)){
+        return true;
+    }else{
+        return isSubtree(root->left,subRoot) || isSubtree(root->right,subRoot);
+    } 
+}
+
+//Construct BT wit Inorder and Preorder ::https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+Tree_Binary<int>* build(vector<int>& preorder, vector<int>& inorder, int& rootIdx, int left, int right) {
+        if (left > right) return NULL;
+        int pivot = left;  // find the root from inorder
+        while(inorder[pivot] != preorder[rootIdx]) pivot++;
+        
+        rootIdx++; 
+        Tree_Binary<int>* root = new Tree_Binary<int>(inorder[pivot]);
+        root->left = build(preorder, inorder, rootIdx, left, pivot-1);
+        root->right = build(preorder, inorder, rootIdx, pivot+1, right);
+        return root;
+    }
+    Tree_Binary<int>* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        int rootIdx = 0;
+        return build(preorder, inorder, rootIdx, 0, inorder.size()-1);
+}
+
+//Construct by inorder and postorder
+
+Tree_Binary<int> *Tree(vector<int>& in, int x, int y,vector<int>& po,int a,int b){
+        if(x > y || a > b)return nullptr;
+        Tree_Binary<int> *node = new Tree_Binary<int>(po[b]);
+        int SI = x;  
+        while(node->data != in[SI])SI++;
+        node->left  = Tree(in,x,SI-1,po,a,a+SI-x-1);
+        node->right = Tree(in,SI+1,y,po,a+SI-x,b-1);
+        return node;
+    }
+    Tree_Binary<int>* buildTree(vector<int>& in, vector<int>& po){
+        return Tree(in,0,in.size()-1,po,0,po.size()-1);
+    }
 
 
 int main(){
@@ -364,7 +447,7 @@ int main(){
     root->right = right;
     left->left = left2; */
     Tree_Binary<int>* root =TakeInputLevelWise();
-    //BT  ::1 2 3 4 5 -1 8 6 7 -1 -1 -1 -1 -1 -1 -1 -1
+    //BT  :: 1 2 3 4 5 -1 8 6 7 -1 -1 -1 -1 -1 -1 -1 -1
     //BST :: 10 8 12 7 9 11 13 -1 -1 -1 -1 -1 -1 -1 -1
     cout<<NumNode(root)<<endl;
     Print_BinaryTree(root);
@@ -442,5 +525,5 @@ Degenerate Binary Tree ::  A tree where every internal nodes has one child such 
     Preorder Tranv :: 12453
     Postorder Tranv:: 45231
 
-if any two tranversal are same that means trees are equal;
+if any preorder and Postorder tranversal are same that means trees are equal;
 */

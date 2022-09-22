@@ -141,10 +141,6 @@ void Depth_Node(TreeNode<int>*root,int level){
  
 
 
-
-
-
-
 void Delete_Node(TreeNode<int>*root){
     for (int i = 0; i < root->children.size(); i++){
         Delete_Node(root->children[i]);
