@@ -17,6 +17,7 @@ class MapNode{
         ~MapNode(){
             delete next;
         }
+        
 template<typename v>
 class ourMap{
     MapNode<v>* buckets;
