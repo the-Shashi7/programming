@@ -21,15 +21,17 @@ class TreeNode{
 //Printing Functions
 
 void printTree(TreeNode<int>* root){
+    //base case
     if(root == NULL){
         return;
     }
     cout<<root->data<<":";
-
+    //calculation
     for (int i = 0; i < root->children.size(); i++){
         cout<<root->children[i]->data<<",";
     }
     cout<<endl;
+    //recursion
     for (int i = 0; i < root->children.size(); i++){
         printTree(root->children[i]);
     }  

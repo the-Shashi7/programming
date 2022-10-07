@@ -61,7 +61,8 @@ void BFS(int** edges, int n){
         visited[i] = false;
     }
     for (int  i = 0; i < n; i++){
-        if(!visited[i]) PrintBFS(edges,n,i,visited);
+        if(!visited[i]) 
+            PrintBFS(edges,n,i,visited);
     }
     delete [] visited; 
 }

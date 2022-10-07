@@ -54,6 +54,7 @@ int main(){
     nums.push_back(2);
     nums.capacity();
     nums.size();
+    sort(nums.begin(),nums.end());
     reverse(nums.begin(),nums.end());
     //Iterators
     //Iterator(it) takes the first element address than it travels to next element by "it++".
@@ -62,3 +63,8 @@ int main(){
     nums.erase(it,it+3); // erase(start from, to end).
     return 0;
 }
+
+/*
+  [] in vector use for update and get value;
+
+*/

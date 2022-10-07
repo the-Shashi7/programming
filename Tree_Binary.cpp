@@ -61,7 +61,6 @@ Tree_Binary<int>* TakeInputLevelWise(){
     cout<<"Enter Root Data : ";
     cin>>rootData;
     Tree_Binary<int>* root = new Tree_Binary<int>(rootData);
-
     queue<Tree_Binary<int>*> PendingNodes;
     PendingNodes.push(root);
     while (PendingNodes.size()!= 0){
@@ -256,6 +255,7 @@ int Diameter_Btree(Tree_Binary<int>*root){
     int option2 = Diameter_Btree(root->left);
     int option3 = Diameter_Btree(root->right);
 
+
     return max(option1,max(option2,option3));
 }
 
@@ -323,7 +323,7 @@ bool findPath(Tree_Binary<int>* root,vector<Tree_Binary<int>*> paths,Tree_Binary
     paths.pop_back();
     return false;
 }
-Tree_Binary<int>* LCA2(Tree_Binary<int>* root,Tree_Binary<int>*p,Tree_Binary<int>* q){
+Tree_Binary<int>* LCA(Tree_Binary<int>* root,Tree_Binary<int>*p,Tree_Binary<int>* q){
     vector<Tree_Binary<int>*> path1,path2;
     if(!findPath(root,path1,p)||!findPath(root,path2,q))
         return NULL;
@@ -336,16 +336,18 @@ Tree_Binary<int>* LCA2(Tree_Binary<int>* root,Tree_Binary<int>*p,Tree_Binary<int
 }
 //O(n) and sc:O(h)
 
-Tree_Binary<int> * dfsTraverse(Tree_Binary<int> * root, Tree_Binary<int> * p , Tree_Binary<int> * q){
+Tree_Binary<int> * dfsTraverseLCA(Tree_Binary<int> * root, Tree_Binary<int> * p , Tree_Binary<int> * q){
     if( root == p || root == q || root == NULL)
         return root;
-    Tree_Binary<int>* parent1 = dfsTraverse(root->left, p, q);
-    Tree_Binary<int>* parent2 = dfsTraverse(root->right, p, q);
-    if( parent1 && parent2)
-        return root;
+    Tree_Binary<int>* left = dfsTraverseLCA(root->left, p, q);
+    Tree_Binary<int>* right = dfsTraverseLCA(root->right, p, q);
+    if( left && right)
+        return root; 
     else
-        return parent1 ? parent1 : parent2;
+        return left ? left : right;
 }
+
+
 //Horizontal Height
 unordered_set<int> st;
 void inorder(Tree_Binary<int>* root,int s){
@@ -454,7 +456,7 @@ int main(){
     cout<<MaxNode(root)<<endl;
     cout<<Height_BTree(root)<<endl;
     Depth_BTree(root,2);
-    cout<<endl;
+    cout<<endl;  
     cout<<Sum_Node(root)<<endl;
     Preorder_Btree(root);
     cout<<endl;
