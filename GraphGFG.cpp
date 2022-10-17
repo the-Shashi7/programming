@@ -41,8 +41,7 @@ class Graph{
         }
 };
 
-class Graph
-{
+class Graph{
 public:
     int nv;
     set<int> *AdjList; // unordered_set<int>* AdjList;
@@ -50,9 +49,9 @@ public:
 
 Graph *CreateGraph(int nv)
 {
-    Graph *graph = new Graph;
+    Graph *graph = new Graph;    
     graph->nv = nv;
-    // Create an array of ets represting 2) Adjancency list . size of array will be vertex;
+    // Create an array of sets represting 2) Adjancency list . size of array will be vertex;
     graph->AdjList = new set<int>[nv]; // graph->AdjList = new unoredred_set<int>[nv];
     return graph;
 }
@@ -73,10 +72,10 @@ void PrintGraphSet(Graph *graph)
         {
             cout << *itr << " , ";
         }
-        cout << endl;
+        cout << endl;  
     }
 }
-
+ 
 void SearchEdgeSet(Graph *graph, int v1, int v2)
 {
     auto itr = graph->AdjList[v1].find(v2);
@@ -101,8 +100,7 @@ void TransposGraph(Graph *graph, Graph *Transpose, int nv)
 // Searching and adding edge O(1);
 
 //========================vector<int,list<int>> adj==============
-class GraphList
-{
+class GraphList{
 public:
     int nv;
     vector<list<int>> AdjList;
@@ -152,29 +150,20 @@ vector<int> PrintBFS(GraphList *graph)
 }
 // DFS -> path finding cycle detetion, topological sort,finding strong connected components
 
-void DFS(GraphList *graph, vector<bool> &visited, vector<int> &ans, int sv)
-{
+void DFS(GraphList *graph, vector<bool> &visited, vector<int> &ans, int sv){
     visited[sv] = true;
     ans.push_back(sv);
-
-    for (auto i : graph->AdjList[sv])
-    {
-        if (!visited[i])
-        {
+    for (auto i : graph->AdjList[sv]){
+        if (!visited[i]){
             DFS(graph, visited, ans, i);
-        }
-        if (visited[i])
-        {
-            continue;
         }
     }
 }
-vector<int> PrintDFS(GraphList *graph)
-{
+
+vector<int> PrintDFS(GraphList *graph){
     vector<bool> visited(graph->nv, false);
     vector<int> ans;
-    for (int i = 0; i < graph->nv; i++)
-    {
+    for (int i = 0; i < graph->nv; i++){
         if (!visited[i])
             DFS(graph, visited, ans, i);
     }
@@ -183,8 +172,7 @@ vector<int> PrintDFS(GraphList *graph)
 //============================================================================================================================================================
 //============================================================================================================================================================
 // cycle detection Directed
-bool cycle(int sv, vector<bool> &visited, vector<bool> &currVisited, vector<int> adj[])
-{
+bool cycle(int sv, vector<bool> &visited, vector<bool> &currVisited, vector<int> adj[]){
     visited[sv] = true;
     currVisited[sv] = true;
 
@@ -204,8 +192,7 @@ bool cycle(int sv, vector<bool> &visited, vector<bool> &currVisited, vector<int>
     return false;
 }
 
-bool isCyclic(vector<int> adj[], int v)
-{
+bool isCyclic(vector<int> adj[], int v){
     vector<bool> visited(v, false), currVisited(v, false);
     for (int i = 0; i < v; i++)
     {
@@ -276,27 +263,25 @@ vector<vector<int>> allPathsSourceTarget(vector<vector<int>> &graph)
 }
 //Shortest Path in Undirected Graphs(BFS)
 
-vector<int> shortestPath(vector<pair<int,int>> edges,int n,int m,int s,int t){
+vector<int> shortestPath(vector<pair<int,int>> edges,int source,int dest){
     unordered_map<int, list<int>> adjList;
     for (int i = 0; i < edges.size(); i++){
         int u = edges[i].first;
         int v = edges[i].second;
 
-        adjList[u].push_back(v);
+        adjList[u].push_back(v); 
         adjList[v].push_back(u);
     }
     //do bfs
-
     unordered_map<int, bool> visited;
     unordered_map<int,int> parent;
     queue<int> q;
-    q.push(s);
-    visited[s] = true;
+    q.push(source);
+    visited[source] = true;
 
     while (!q.empty()){
         int front = q.front();
         q.pop();
-
         for(auto v : adjList[front]){
             if(!visited[v]){
                 visited[v] = true;
@@ -307,13 +292,14 @@ vector<int> shortestPath(vector<pair<int,int>> edges,int n,int m,int s,int t){
     }
     //prepare shortest path
     vector<int> ans;
-    int currNode = t;
+    int currNode = dest;
     ans.push_back(currNode);
 
-    while (currNode!=s){
+    while (currNode!=source){
         currNode = parent[currNode];
         ans.push_back(currNode);
     }
+    reverse(ans.begin(),ans.end());
     return ans;  
 }
 
@@ -363,8 +349,7 @@ void colorgrid(vector<vector<int>> &image, int i, int j, int row, int col, int s
         colorgrid(image, i, j - 1, row, col, scolor, color);
 }
 
-vector<vector<int>> floodFill(vector<vector<int>> &image, int sr, int sc, int color)
-{
+vector<vector<int>> floodFill(vector<vector<int>> &image, int sr, int sc, int color){
     int row = image.size();
     int col = image[0].size();
     int scolor = image[sr][sc];
@@ -379,36 +364,28 @@ vector<vector<int>> floodFill(vector<vector<int>> &image, int sr, int sc, int co
     return image;
 }
 //==========Topological Sort (Kahn's BFS base Algorithms)================
-
-vector<int> topoloSort(int V, vector<int> adj[])
-{
+vector<int> topoloSort(int V, vector<int> adj[]){
     vector<int> ans;
     queue<int> q;
     vector<int> indegree(V, 0);
 
-    for (int i = 0; i < V; i++)
-    {
-        for (auto x : adj[i])
-        {
+    for (int i = 0; i < V; i++){
+        for (auto x : adj[i]){
             indegree[x]++;
         }
     }
 
-    for (int i = 0; i < V; i++)
-    {
-        if (indegree[i] == 0)
-        {
+    for (int i = 0; i < V; i++){
+        if (indegree[i] == 0){
             q.push(i);
         }
     }
-    while (!q.empty())
-    {
+    while (!q.empty()){
         int u = q.front();
         q.pop();
         ans.push_back(u);
 
-        for (auto v : adj[u])
-        {
+        for (auto v : adj[u]){
             indegree[v]--;
             if (indegree[v] == 0)
             {
@@ -418,34 +395,26 @@ vector<int> topoloSort(int V, vector<int> adj[])
     }
     return ans;
 }
-// topological by DFS
-void DFSrec(int sv, vector<int> &ans, vector<bool> &visited, vector<int> adj[])
-{
-    visited[sv] = true;
 
-    for (auto v : adj[sv])
-    {
-        if (!visited[v])
-        {
+// topological by DFS
+void DFSrec(int sv, vector<int> &ans, vector<bool> &visited, vector<int> adj[]){
+    visited[sv] = true;
+    for (auto v : adj[sv]){
+        if (!visited[v]){
             DFSrec(v, ans, visited, adj);
         }
     }
     ans.push_back(sv);
 }
 
-vector<int> topoloSort(int V, vector<int> adj[])
-{
+vector<int> topoloSort(int V, vector<int> adj[]){
     vector<bool> visited(V, false);
     vector<int> ans;
-
-    for (int i = 0; i < V; i++)
-    {
-        if (!visited[i])
-        {
+    for (int i = 0; i < V; i++){
+        if (!visited[i]){
             DFSrec(i, ans, visited, adj);
         }
     }
-
     reverse(ans.begin(), ans.end());
     return ans;
 }
