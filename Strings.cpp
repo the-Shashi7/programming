@@ -79,12 +79,6 @@ int main(){
     vectString.push_back("Two");
     vectString.push_back("Three");
     vectString.push_back("Four");
-
     cout<<vectString[0][2]<<endl;
-
-
-
-
-
     return 0;
 }

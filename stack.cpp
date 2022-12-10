@@ -215,7 +215,35 @@ int minAddToMakeValid(string s) {
 }
 
 /*
+Validate Stack Sequences
+https://leetcode.com/problems/validate-stack-sequences/
 */
+// TC: O(n) sc:O(n)
+bool validateStackSequences(vector<int>& pushed, vector<int>& popped) {
+        stack<int> st;
+        int j=0;
+        for(auto val:pushed){
+            st.push(val);
+            while(!st.empty() && st.top()==popped[j]){
+                st.pop();
+                j++;
+            }
+        }   
+        return st.size() == 0;
+}
+//TC: O(n),SC:O(1);
+bool validateStackSequencesO(vector<int>& pushed, vector<int>& popped) {
+        int j=0;
+        int i=0;
+        for(auto c:pushed){
+            pushed[i++] = c;
+            while(i>0 && pushed[i-1] == popped[j]){
+                j++;
+                i--;
+            }
+        }   
+        return i == 0;
+    }
 
 
 int main(){

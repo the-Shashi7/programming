@@ -304,6 +304,37 @@ vector<int> shortestPath(vector<pair<int,int>> edges,int source,int dest){
 }
 
 //Shortest Path in Directed Acyclic Graphs
+vector<int> ans;
+void dfsDAG(int sv,unordered_map<int,vector<pair<int,int>>>&adjList,vector<int>&ans,vector<bool> &visit){
+    visit[sv] =true;
+    for(auto v : adjList[sv]){
+        if(!visit[v.first]){
+            dfsDAG(v.first,adjList,ans,visit);
+        }
+    }
+    ans.push_back(sv);
+}
+
+void topologi(int V,unordered_map<int,vector<pair<int,int>>>&adjList){
+    vector<bool> visit(V,false);
+    for(int i=0;i<V;i++){
+        if(!visit[i]){
+            dfsDAG(i,adjList,ans,visit);
+        }
+    }
+    reverse(ans.begin(),ans.end());
+}
+vector<int> shortestDAG(int v,unordered_map<int,vector<pair<int,int>>>&adjList,int src,int dest){
+    vector<int> dist(v,INT_MAX);
+    dist[src] = 0;
+    for(int i=0;i<v;i++){
+        for(auto x: adjList[ans[i]]){
+            if(x.second <= dist[i]){
+                dist[i] = x.second;
+            }
+        }
+    }
+}
 
 
 
@@ -409,7 +440,7 @@ void DFSrec(int sv, vector<int> &ans, vector<bool> &visited, vector<int> adj[]){
 
 vector<int> topoloSort(int V, vector<int> adj[]){
     vector<bool> visited(V, false);
-    vector<int> ans;
+    vector<int> ans;//we can use stack there for ans
     for (int i = 0; i < V; i++){
         if (!visited[i]){
             DFSrec(i, ans, visited, adj);
@@ -430,7 +461,7 @@ vector<int> dijkdtra(int v,vector<vector<int>> adj[],int src){
     vector<int> cost(v,0);
     cost[src] = 0;
     vector<bool> visited(v,false);
-    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq; //priority_queue<pair<minimum distance,node>>pq  increasing order
     pq.push({0,src});
 
     while(!pq.empty()){
@@ -455,7 +486,7 @@ vector<int> dijkdtra(int v,vector<vector<int>> adj[],int src){
         }
 
     }
-
+    return cost;
 }
 
 //Prims Algorithms -> Minimum spanning tree(MST)
@@ -487,12 +518,12 @@ int spanningTree(int v,vector<vector<int>> adj[]){
                 }
             }
         }
-        return minCost;
     }
+    return minCost;
 }
 
 // kruskal's Algorithms :: Minimum cost spanning tree
-class Edge {
+class Edge { 
     public:
         int source;
         int dest;
