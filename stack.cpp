@@ -27,7 +27,10 @@ void NGE_1(vector<int> v){
     }
     for(auto x : ans) cout<<x<<" ";
 }
-void NSE_1(vector<int> v){          //Next Smallest elements
+
+//Next Smallest elements O(n);
+
+void NSE_1(vector<int> v){          
     int n = v.size();
     vector<int> ans(n);
     stack<int> s;
@@ -41,7 +44,9 @@ void NSE_1(vector<int> v){          //Next Smallest elements
     for(auto x : ans) cout<<x<<" ";
 }
 
-void PSE_1(vector<int> v){          //Next Smallest elements
+//Next Smallest elements
+
+void PSE_1(vector<int> v){          
     int n = v.size();
     vector<int> ans(n,0);
     stack<int> s;
@@ -134,6 +139,48 @@ void Diff_LR(vector<int> v){
     
     cout<<"Max Differenec : "<<max_diff<<endl;
 }
+
+/*
+https://leetcode.com/problems/largest-rectangle-in-histogram/
+Given an array of integers heights representing the histogram's bar height where the width of each bar is 1, 
+return the area of the largest rectangle in the histogram.
+*/
+int largestRectangleArea(vector<int>& heights) {
+        int area = INT_MIN;
+        int n = heights.size();
+        
+        if(n==0) return 0;
+        if(n==1) return heights[0];
+        
+        vector<int> prev_smaller(n,0);
+        vector<int> next_smaller(n,n);
+        stack<int> s;
+        
+        for(int i =n-1 ; i>=0 ; i--){
+            while(!s.empty() && heights[s.top()] >= heights[i]){
+                s.pop();
+            }
+            s.empty() ? next_smaller[i] = n: next_smaller[i] = s.top(); //next greater element may at nth place;
+            s.push(i);
+        }
+        
+        while(!s.empty()) s.pop();
+        
+        for(int i = 0; i < n ; i++  ){
+            while(!s.empty() && heights[s.top()]>=heights[i]){
+                s.pop();
+            }
+            s.empty() ? prev_smaller[i] = -1: prev_smaller[i] = s.top();
+            s.push(i);
+        }
+        
+        for(int i=0;i<n;i++){
+            area = max(area, (next_smaller[i]-prev_smaller[i]-1)*heights[i]);
+        }
+        return area;
+}
+
+
 
 /* 85. Maximal Rectangle ::https://leetcode.com/problems/maximal-rectangle/
 Given a rows x cols binary matrix filled with 0's and 1's, find the largest rectangle containing only 1's and return its area
