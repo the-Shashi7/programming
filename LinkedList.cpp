@@ -13,7 +13,7 @@ class LinkedList {
 };
 
 LinkedList* TakeInput(){
-    cout<<"Enter Data"<<endl;
+    cout<<"Enter Node Data (to end -1)"<<endl;
     int data;
     cin>>data;
     LinkedList* head = NULL;
@@ -181,7 +181,7 @@ void Print(LinkedList* head){
 int main(){
     LinkedList* head = TakeInput();
     //Insert(head,0,100);
-    Delete(head,5);
+    //Delete(head,5);
     Print(head);
     return 0;
 }
